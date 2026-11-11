@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Wanderlog</string>
     <string name="wanderlog">Wanderlog</string>
+    <string name="username">username</string>
+    <string name="someone_example_com">someone@example.com</string>
+    <string name="password">password</string>
+    <string name="confirm_password">confirm password</string>
+    <string name="register">Register</string>
+    <string name="already_have_an_account_log_in">Already have an account? Log in!</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="log_in">Log in</string>
 </resources>

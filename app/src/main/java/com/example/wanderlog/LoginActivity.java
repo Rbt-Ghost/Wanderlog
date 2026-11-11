@@ -40,6 +40,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    public void GoToRegisterBtn(View view){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
     private  boolean emailValidation(EditText email){
         return email.getText().toString().length() >= 4 && email.getText().toString().contains("@") && email.getText().toString().contains(".");
     }

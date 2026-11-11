@@ -1,9 +1,11 @@
 package com.example.wanderlog;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +42,11 @@ public class RegisterActivity extends AppCompatActivity {
         else {
             Toast.makeText(this,"Invalid data", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void GoToLoginBtn(View view){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private boolean usernameValidation(EditText username){

@@ -28,10 +28,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public void LoginBtn(View view){
 
-        EditText emial = findViewById(R.id.email);
+        EditText email = findViewById(R.id.email);
         EditText password1 = findViewById(R.id.password1);
 
-        if( emailValidation(emial) && passValidation(password1)){
+        if( emailValidation(email) && passValidation(password1)){
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }

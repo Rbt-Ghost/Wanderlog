@@ -29,11 +29,11 @@ public class RegisterActivity extends AppCompatActivity {
     public void RegisterBtn(View view){
 
         EditText username = findViewById(R.id.username);
-        EditText emial = findViewById(R.id.email);
+        EditText email = findViewById(R.id.email);
         EditText password1 = findViewById(R.id.password1);
         EditText password2 = findViewById(R.id.password2);
 
-        if( usernameValidation(username) && emailValidation(emial) && passValidation(password1, password2)){
+        if( usernameValidation(username) && emailValidation(email) && passValidation(password1, password2)){
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }

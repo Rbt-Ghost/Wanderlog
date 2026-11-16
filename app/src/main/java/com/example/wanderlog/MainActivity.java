@@ -1,6 +1,8 @@
 package com.example.wanderlog;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -20,5 +22,15 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    public void GoToAddTripActivity(View view){
+        Intent intent = new Intent(this, AddTripActivity.class);
+        startActivity(intent);
+    }
+
+    public void GoToProfileActivity(View view){
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
     }
 }

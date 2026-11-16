@@ -11,4 +11,8 @@
     <string name="log_in">Log in</string>
     <string name="addtrip">AddTrip</string>
     <string name="gotoprofileactivity">GoToProfileActivity</string>
+    <string name="trip_title">Trip Title</string>
+    <string name="trip_description">Trip description</string>
+    <string name="selected_trip_picture">Selected trip picture</string>
+    <string name="upload_picture">Upload Picture</string>
 </resources>

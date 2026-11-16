@@ -15,4 +15,17 @@
     <string name="trip_description">Trip description</string>
     <string name="selected_trip_picture">Selected trip picture</string>
     <string name="upload_picture">Upload Picture</string>
+    <string name="c_l_torie_nou">Călătorie nouă</string>
+    <string name="titlul_c_l_toriei">Titlul călătoriei</string>
+    <string name="descriere">Descriere</string>
+    <string name="location">Location</string>
+    <string name="_1_to_3_pictures">1 to 3 Pictures</string>
+    <string name="add_pictures">Add pictures</string>
+    <string name="save_trip">Save Trip</string>
+    <string name="fotografia_1">Fotografia 1</string>
+    <string name="remove_photo">Remove photo</string>
+    <string name="picture_1">Picture 1</string>
+    <string name="picture_2">Picture 2</string>
+    <string name="picture_3">Picture 3</string>
+    <string name="x">×</string>
 </resources>

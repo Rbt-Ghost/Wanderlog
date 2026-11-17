@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Wanderlog</string>
     <string name="wanderlog">Wanderlog</string>
@@ -22,10 +23,27 @@
     <string name="_1_to_3_pictures">1 to 3 Pictures</string>
     <string name="add_pictures">Add pictures</string>
     <string name="save_trip">Save Trip</string>
-    <string name="fotografia_1">Fotografia 1</string>
-    <string name="remove_photo">Remove photo</string>
+    <string name="update_trip">Update Trip</string>
+    <string name="edit_trip">Edit</string>
+    <string name="delete_trip">Delete</string>
+    <string name="delete_trip_title">Delete trip?</string>
+    <string name="delete_trip_confirmation">Delete “%1$s” from your trips?</string>
+    <string name="cancel">Cancel</string>
+    <string name="trip_list_empty">Your trips will appear here. Tap + to add your first trip.</string>
+    <string name="open_trip_menu">Trip options</string>
+    <string name="trip_photo">Trip photo</string>
+    <string name="photos_count">Photos (%1$d)</string>
+    <string name="trip_detail_back">‹  Back to trips</string>
+    <string name="insert_trip_title">Insert Trip Title</string>
+    <string name="insert_trip_description">Insert Trip Description</string>
+    <string name="insert_trip_location">Insert trip location</string>
+    <string name="add_at_least_one_picture">Add at least one picture</string>
+    <string name="maximum_pictures">You can add a maximum of 3 pictures.</string>
+    <string name="trip_added">Trip added</string>
+    <string name="trip_updated">Trip updated</string>
     <string name="picture_1">Picture 1</string>
     <string name="picture_2">Picture 2</string>
     <string name="picture_3">Picture 3</string>
     <string name="x">×</string>
+    <string name="remove_photo">Remove photo</string>
 </resources>

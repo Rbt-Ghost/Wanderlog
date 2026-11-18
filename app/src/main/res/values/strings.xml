@@ -46,4 +46,15 @@
     <string name="picture_3">Picture 3</string>
     <string name="x">×</string>
     <string name="remove_photo">Remove photo</string>
+    <string name="username_too_short">Username must be at least 3 characters.</string>
+    <string name="enter_valid_email">Enter a valid email address.</string>
+    <string name="password_requirements">Use at least 8 characters, including an uppercase letter, a lowercase letter, a number, and a symbol.</string>
+    <string name="passwords_do_not_match">Passwords do not match.</string>
+    <string name="enter_password">Enter your password.</string>
+    <string name="registration_failed">Could not create the account. Check your details and try again.</string>
+    <string name="login_failed">Could not log in. Check your email and password.</string>
+    <string name="profile_name_not_saved">Account created, but the username could not be saved.</string>
+    <string name="profile_title">Your profile</string>
+    <string name="log_out">Log out</string>
+    <string name="logged_out">You have been logged out.</string>
 </resources>

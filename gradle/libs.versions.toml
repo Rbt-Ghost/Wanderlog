@@ -24,6 +24,7 @@ material-v1120 = { module = "com.google.android.material:material", version.ref 
 recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

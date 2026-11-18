@@ -29,8 +29,8 @@ public class TripDetailActivity extends AppCompatActivity {
             return insets;
         });
 
-        int index = getIntent().getIntExtra(TripStore.EXTRA_TRIP_INDEX, -1);
-        Trip trip = TripStore.getTrip(index);
+        String tripId = getIntent().getStringExtra(TripStore.EXTRA_TRIP_ID);
+        Trip trip = TripStore.getTrip(tripId);
         if (trip == null) {
             finish();
             return;

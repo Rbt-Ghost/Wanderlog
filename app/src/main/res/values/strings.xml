@@ -41,6 +41,9 @@
     <string name="maximum_pictures">You can add a maximum of 3 pictures.</string>
     <string name="trip_added">Trip added</string>
     <string name="trip_updated">Trip updated</string>
+    <string name="trip_save_failed">Could not save the trip. Check your connection and try again.</string>
+    <string name="trip_delete_failed">Could not delete the trip. Check your connection and try again.</string>
+    <string name="trips_load_failed">Could not load your trips. Check your connection and try again.</string>
     <string name="picture_1">Picture 1</string>
     <string name="picture_2">Picture 2</string>
     <string name="picture_3">Picture 3</string>

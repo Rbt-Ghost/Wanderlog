@@ -34,10 +34,11 @@ import java.util.concurrent.Executors;
 
 public class AddTripActivity extends AppCompatActivity {
     private EditText tripTitle, tripDescription, tripLocation;
+    private Button saveTripButton;
     private ImageButton currentLocationButton;
     private ProgressBar currentLocationProgress;
     private TextView currentLocationStatus;
-    private int editingTripIndex = -1;
+    private String editingTripId;
     private final List<Uri> selectedImages = new ArrayList<>();
     private ImageView[] imageViews;
     private Button[] removeButtons;
@@ -79,18 +80,14 @@ public class AddTripActivity extends AppCompatActivity {
         removeButtons = new Button[]{findViewById(R.id.remove1), findViewById(R.id.remove2),
                 findViewById(R.id.remove3)};
         Button uploadButton = findViewById(R.id.uploadImageButton);
-        Button saveButton = findViewById(R.id.saveTripButton);
+        saveTripButton = findViewById(R.id.saveTripButton);
 
-        editingTripIndex = getIntent().getIntExtra(TripStore.EXTRA_TRIP_INDEX, -1);
-        Trip existing = TripStore.getTrip(editingTripIndex);
+        editingTripId = getIntent().getStringExtra(TripStore.EXTRA_TRIP_ID);
+        Trip existing = TripStore.getTrip(editingTripId);
         if (existing != null) {
-            tripTitle.setText(existing.getTitle());
-            tripDescription.setText(existing.getDescription());
-            tripLocation.setText(existing.getLocation());
-            selectedImages.addAll(existing.getPhotos());
-            saveButton.setText(R.string.update_trip);
-        } else {
-            editingTripIndex = -1;
+            populateTrip(existing);
+        } else if (editingTripId != null) {
+            saveTripButton.setEnabled(false);
         }
 
         uploadButton.setOnClickListener(view -> {
@@ -110,9 +107,21 @@ public class AddTripActivity extends AppCompatActivity {
                 }
             });
         }
-        saveButton.setOnClickListener(view -> saveTrip());
+        saveTripButton.setOnClickListener(view -> saveTrip());
         currentLocationButton.setOnClickListener(view -> requestCurrentCity());
         updateImagePreviews();
+
+        if (existing == null && editingTripId != null) {
+            TripStore.loadTrip(this, editingTripId, (trip, exception) -> runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                if (exception != null || trip == null) {
+                    Toast.makeText(this, R.string.trips_load_failed, Toast.LENGTH_LONG).show();
+                    finish();
+                    return;
+                }
+                populateTrip(trip);
+            }));
+        }
     }
 
     private void requestCurrentCity() {
@@ -295,6 +304,17 @@ public class AddTripActivity extends AppCompatActivity {
         }
     }
 
+    private void populateTrip(Trip trip) {
+        tripTitle.setText(trip.getTitle());
+        tripDescription.setText(trip.getDescription());
+        tripLocation.setText(trip.getLocation());
+        selectedImages.clear();
+        selectedImages.addAll(trip.getPhotos());
+        saveTripButton.setText(R.string.update_trip);
+        saveTripButton.setEnabled(true);
+        updateImagePreviews();
+    }
+
     private void saveTrip() {
         String title = tripTitle.getText().toString().trim();
         String description = tripDescription.getText().toString().trim();
@@ -318,11 +338,20 @@ public class AddTripActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.add_at_least_one_picture, Toast.LENGTH_SHORT).show();
             return;
         }
-        boolean updating = editingTripIndex >= 0;
-        TripStore.saveTrip(editingTripIndex, new Trip(title, description, location, selectedImages));
-        Toast.makeText(this, updating ? R.string.trip_updated : R.string.trip_added,
-                Toast.LENGTH_SHORT).show();
-        finish();
+        boolean updating = editingTripId != null;
+        saveTripButton.setEnabled(false);
+        Trip trip = new Trip(editingTripId, title, description, location, selectedImages);
+        TripStore.saveTrip(this, trip, exception -> runOnUiThread(() -> {
+            if (isFinishing() || isDestroyed()) return;
+            saveTripButton.setEnabled(true);
+            if (exception != null) {
+                Toast.makeText(this, R.string.trip_save_failed, Toast.LENGTH_LONG).show();
+                return;
+            }
+            Toast.makeText(this, updating ? R.string.trip_updated : R.string.trip_added,
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        }));
     }
 
     @Override

@@ -66,6 +66,17 @@
     <string name="login_failed">Could not log in. Check your email and password.</string>
     <string name="profile_name_not_saved">Account created, but the username could not be saved.</string>
     <string name="profile_title">Your profile</string>
+    <string name="profile_default_name">Traveler</string>
+    <string name="profile_subtitle">Your travels, all in one place</string>
+    <string name="profile_activity_heading">Your activity</string>
+    <string name="profile_trips">Trips added</string>
+    <string name="profile_destinations">Places</string>
+    <string name="profile_photos">Photos</string>
+    <string name="profile_recent_trips">Recent trips</string>
+    <string name="profile_activity_loading">Loading your travel activity…</string>
+    <string name="profile_activity_load_failed">Couldn’t load your activity. Check your connection and try again.</string>
+    <string name="profile_activity_empty">No trips yet. Add your first trip to start building your travel history.</string>
+    <string name="untitled_trip">Untitled trip</string>
     <string name="log_out">Log out</string>
     <string name="logged_out">You have been logged out.</string>
 </resources>

@@ -1,26 +1,57 @@
 package com.example.wanderlog;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
+import android.os.CancellationSignal;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.location.LocationManagerCompat;
 import androidx.core.view.WindowCompat;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AddTripActivity extends AppCompatActivity {
     private EditText tripTitle, tripDescription, tripLocation;
+    private ImageButton currentLocationButton;
+    private ProgressBar currentLocationProgress;
+    private TextView currentLocationStatus;
     private int editingTripIndex = -1;
     private final List<Uri> selectedImages = new ArrayList<>();
     private ImageView[] imageViews;
     private Button[] removeButtons;
+    private final ExecutorService geocoderExecutor = Executors.newSingleThreadExecutor();
+
+    private final ActivityResultLauncher<String[]> locationPermissionRequest =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                if (hasLocationPermission()) {
+                    getCurrentCity();
+                } else {
+                    setLocationLoading(false);
+                    Toast.makeText(this, R.string.location_permission_required, Toast.LENGTH_LONG).show();
+                }
+            });
 
     private final ActivityResultLauncher<PickVisualMediaRequest> imagePicker =
             registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(3), uris -> {
@@ -40,6 +71,9 @@ public class AddTripActivity extends AppCompatActivity {
         tripTitle = findViewById(R.id.tripTitle);
         tripDescription = findViewById(R.id.tripDescription);
         tripLocation = findViewById(R.id.tripLocation);
+        currentLocationButton = findViewById(R.id.currentLocationButton);
+        currentLocationProgress = findViewById(R.id.currentLocationProgress);
+        currentLocationStatus = findViewById(R.id.currentLocationStatus);
         imageViews = new ImageView[]{findViewById(R.id.image1), findViewById(R.id.image2),
                 findViewById(R.id.image3)};
         removeButtons = new Button[]{findViewById(R.id.remove1), findViewById(R.id.remove2),
@@ -77,7 +111,173 @@ public class AddTripActivity extends AppCompatActivity {
             });
         }
         saveButton.setOnClickListener(view -> saveTrip());
+        currentLocationButton.setOnClickListener(view -> requestCurrentCity());
         updateImagePreviews();
+    }
+
+    private void requestCurrentCity() {
+        if (hasLocationPermission()) {
+            getCurrentCity();
+        } else {
+            locationPermissionRequest.launch(new String[]{
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            });
+        }
+    }
+
+    private boolean hasLocationPermission() {
+        return hasFineLocationPermission() || hasCoarseLocationPermission();
+    }
+
+    private boolean hasFineLocationPermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean hasCoarseLocationPermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void getCurrentCity() {
+        setLocationLoading(true);
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (locationManager == null) {
+            setLocationLoading(false);
+            Toast.makeText(this, R.string.current_location_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+        boolean hasFinePermission = hasFineLocationPermission();
+        String provider = hasFinePermission
+                ? LocationManager.GPS_PROVIDER : LocationManager.NETWORK_PROVIDER;
+        String fallbackProvider = hasFinePermission && hasCoarseLocationPermission()
+                ? LocationManager.NETWORK_PROVIDER : null;
+
+        if (!isProviderEnabled(locationManager, provider)) {
+            if (fallbackProvider != null && isProviderEnabled(locationManager, fallbackProvider)) {
+                provider = fallbackProvider;
+                fallbackProvider = null;
+            } else {
+                setLocationLoading(false);
+                Toast.makeText(this, R.string.location_services_disabled, Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        requestLocation(locationManager, provider, fallbackProvider);
+    }
+
+    private boolean isProviderEnabled(LocationManager locationManager, String provider) {
+        try {
+            return locationManager.getAllProviders().contains(provider)
+                    && locationManager.isProviderEnabled(provider);
+        } catch (SecurityException | IllegalArgumentException exception) {
+            return false;
+        }
+    }
+
+    private void requestLocation(LocationManager locationManager, String provider, String fallbackProvider) {
+        try {
+            LocationManagerCompat.getCurrentLocation(
+                    locationManager,
+                    provider,
+                    new CancellationSignal(),
+                    ContextCompat.getMainExecutor(this),
+                    location -> {
+                        if (isFinishing() || isDestroyed()) return;
+                        if (location != null) {
+                            findCity(location);
+                        } else if (fallbackProvider != null
+                                && hasCoarseLocationPermission()
+                                && isProviderEnabled(locationManager, fallbackProvider)) {
+                            requestLocation(locationManager, fallbackProvider, null);
+                        } else {
+                            setLocationLoading(false);
+                            Toast.makeText(this, R.string.current_location_unavailable, Toast.LENGTH_LONG).show();
+                        }
+                    });
+        } catch (SecurityException | IllegalArgumentException exception) {
+            setLocationLoading(false);
+            Toast.makeText(this, R.string.current_location_unavailable, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void findCity(Location location) {
+        if (!Geocoder.isPresent()) {
+            setLocationLoading(false);
+            Toast.makeText(this, R.string.city_lookup_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1,
+                    new Geocoder.GeocodeListener() {
+                        @Override
+                        public void onGeocode(List<Address> addresses) {
+                            runOnUiThread(() -> applyCity(addresses));
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            runOnUiThread(() -> showCityNotFound());
+                        }
+                    });
+        } else {
+            geocoderExecutor.execute(() -> {
+                List<Address> addresses = null;
+                try {
+                    // The synchronous Geocoder API is deprecated on Android 13+, so it is only used below API 33.
+                    addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                } catch (IOException ignored) {
+                    // The UI callback below presents the same recovery message for an unavailable geocoder.
+                }
+                List<Address> result = addresses;
+                runOnUiThread(() -> applyCity(result));
+            });
+        }
+    }
+
+    private void applyCity(List<Address> addresses) {
+        if (isFinishing() || isDestroyed()) return;
+        String city = extractCity(addresses);
+        if (city == null) {
+            showCityNotFound();
+            return;
+        }
+        tripLocation.setText(city);
+        tripLocation.setSelection(city.length());
+        setLocationLoading(false);
+        Toast.makeText(this, R.string.current_city_added, Toast.LENGTH_SHORT).show();
+    }
+
+    private String extractCity(List<Address> addresses) {
+        if (addresses == null || addresses.isEmpty()) return null;
+        Address address = addresses.get(0);
+        String[] candidates = {
+                address.getLocality(),
+                address.getSubLocality(),
+                address.getSubAdminArea(),
+                address.getAdminArea()
+        };
+        for (String candidate : candidates) {
+            if (candidate != null && !candidate.trim().isEmpty()) return candidate.trim();
+        }
+        return null;
+    }
+
+    private void showCityNotFound() {
+        if (isFinishing() || isDestroyed()) return;
+        setLocationLoading(false);
+        Toast.makeText(this, R.string.city_not_found, Toast.LENGTH_LONG).show();
+    }
+
+    private void setLocationLoading(boolean loading) {
+        currentLocationButton.setVisibility(loading ? View.GONE : View.VISIBLE);
+        currentLocationButton.setEnabled(!loading);
+        currentLocationProgress.setVisibility(loading ? View.VISIBLE : View.GONE);
+        currentLocationStatus.setVisibility(loading ? View.VISIBLE : View.GONE);
     }
 
     private void updateImagePreviews() {
@@ -123,5 +323,11 @@ public class AddTripActivity extends AppCompatActivity {
         Toast.makeText(this, updating ? R.string.trip_updated : R.string.trip_added,
                 Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        geocoderExecutor.shutdownNow();
+        super.onDestroy();
     }
 }

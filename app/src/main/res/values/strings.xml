@@ -46,6 +46,14 @@
     <string name="picture_3">Picture 3</string>
     <string name="x">×</string>
     <string name="remove_photo">Remove photo</string>
+    <string name="use_current_location">Use current location</string>
+    <string name="retrieving_current_location">Retrieving current location…</string>
+    <string name="location_permission_required">Allow location access to fill in your current city.</string>
+    <string name="location_services_disabled">Turn on location services and try again.</string>
+    <string name="current_location_unavailable">Could not get your current location. Try again where GPS reception is better.</string>
+    <string name="city_lookup_unavailable">City lookup is unavailable on this device.</string>
+    <string name="city_not_found">The location was found, but the city could not be identified.</string>
+    <string name="current_city_added">Current city added.</string>
     <string name="username_too_short">Username must be at least 3 characters.</string>
     <string name="enter_valid_email">Enter a valid email address.</string>
     <string name="password_requirements">Use at least 8 characters, including an uppercase letter, a lowercase letter, a number, and a symbol.</string>

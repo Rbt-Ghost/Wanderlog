@@ -1,6 +1,7 @@
 package com.example.wanderlog;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -30,6 +35,22 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView tripCount;
     private TextView destinationCount;
     private TextView photoCount;
+    private TextView avatarInitial;
+    private ImageView avatarImage;
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> avatarPicker =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri == null) return;
+                ProfilePhotoStore.save(this, uri, success -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    if (success) {
+                        ProfilePhotoStore.load(this, this::showAvatar);
+                    } else {
+                        Toast.makeText(this, R.string.profile_photo_failed,
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            });
 
     private final TripStore.TripsListener tripsListener = new TripStore.TripsListener() {
         @Override
@@ -71,7 +92,10 @@ public class ProfileActivity extends AppCompatActivity {
                 ? getString(R.string.profile_default_name) : user.getDisplayName());
         email.setText(user.getEmail() == null ? "" : user.getEmail());
 
-        ((TextView) findViewById(R.id.profileAvatar)).setText(UserInitial.of(user));
+        avatarInitial = findViewById(R.id.profileAvatar);
+        avatarInitial.setText(UserInitial.of(user));
+        avatarImage = findViewById(R.id.profileAvatarImage);
+        findViewById(R.id.profileAvatarFrame).setOnClickListener(this::showAvatarMenu);
         findViewById(R.id.profileBack).setOnClickListener(view -> finish());
         tripCount = findViewById(R.id.profileTripCount);
         destinationCount = findViewById(R.id.profileDestinationCount);
@@ -83,7 +107,41 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (recentTripsContainer != null) TripStore.startListening(this, tripsListener);
+        if (recentTripsContainer != null) {
+            TripStore.startListening(this, tripsListener);
+            ProfilePhotoStore.load(this, this::showAvatar);
+        }
+    }
+
+    private void showAvatar(Bitmap photo) {
+        if (isFinishing() || isDestroyed()) return;
+        avatarImage.setVisibility(photo == null ? View.GONE : View.VISIBLE);
+        avatarInitial.setVisibility(photo == null ? View.VISIBLE : View.GONE);
+        if (photo != null) avatarImage.setImageBitmap(photo);
+    }
+
+    private void showAvatarMenu(View anchor) {
+        if (avatarImage.getVisibility() != View.VISIBLE) {
+            pickAvatar();
+            return;
+        }
+        PopupMenu popup = new PopupMenu(this, anchor);
+        popup.getMenu().add(0, 1, 0, R.string.choose_new_photo);
+        popup.getMenu().add(0, 2, 1, R.string.remove_photo);
+        popup.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == 1) {
+                pickAvatar();
+            } else {
+                ProfilePhotoStore.remove(this, success -> showAvatar(null));
+            }
+            return true;
+        });
+        popup.show();
+    }
+
+    private void pickAvatar() {
+        avatarPicker.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
     }
 
     @Override

@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +22,11 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.location.LocationManagerCompat;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,7 @@ import java.util.concurrent.Executors;
 public class AddTripActivity extends AppCompatActivity {
     private EditText tripTitle, tripDescription, tripLocation;
     private Button saveTripButton;
-    private ImageButton currentLocationButton;
+    private View currentLocationButton;
     private ProgressBar currentLocationProgress;
     private TextView currentLocationStatus;
     private String editingTripId;
@@ -69,6 +71,13 @@ public class AddTripActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         WindowCompat.enableEdgeToEdge(getWindow());
         setContentView(R.layout.activity_add_trip);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.addTripRoot), (view, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
+                    | WindowInsetsCompat.Type.ime());
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
+        findViewById(R.id.addTripBack).setOnClickListener(view -> finish());
         tripTitle = findViewById(R.id.tripTitle);
         tripDescription = findViewById(R.id.tripDescription);
         tripLocation = findViewById(R.id.tripLocation);
@@ -310,6 +319,7 @@ public class AddTripActivity extends AppCompatActivity {
         tripLocation.setText(trip.getLocation());
         selectedImages.clear();
         selectedImages.addAll(trip.getPhotos());
+        ((TextView) findViewById(R.id.addTripTitle)).setText(R.string.edit_trip_title);
         saveTripButton.setText(R.string.update_trip);
         saveTripButton.setEnabled(true);
         updateImagePreviews();

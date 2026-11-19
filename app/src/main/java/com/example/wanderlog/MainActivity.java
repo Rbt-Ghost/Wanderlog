@@ -3,7 +3,6 @@ package com.example.wanderlog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,7 +17,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.List;
 
@@ -26,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MENU_EDIT = 1;
     private static final int MENU_DELETE = 2;
     private LinearLayout tripListContainer;
+    private TextView tripCountLabel;
     private final TripStore.TripsListener tripsListener = new TripStore.TripsListener() {
         @Override
         public void onTripsChanged(List<Trip> trips) {
@@ -58,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         tripListContainer = findViewById(R.id.tripListContainer);
+        tripCountLabel = findViewById(R.id.tripCountLabel);
+        ((TextView) findViewById(R.id.profileButton)).setText(
+                UserInitial.of(FirebaseAuth.getInstance().getCurrentUser()));
     }
 
     @Override
@@ -74,12 +76,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void renderTrips(List<Trip> trips) {
         tripListContainer.removeAllViews();
+        tripCountLabel.setText(getResources().getQuantityString(
+                R.plurals.trip_count, trips.size(), trips.size()));
         if (trips.isEmpty()) {
             TextView empty = new TextView(this);
             empty.setText(R.string.trip_list_empty);
-            empty.setTextSize(16);
-            empty.setGravity(Gravity.CENTER);
-            empty.setPadding(24, 56, 24, 24);
+            empty.setTextAppearance(R.style.TextAppearance_Wl_Body);
+            empty.setPadding(dp(20), dp(24), dp(20), dp(24));
             tripListContainer.addView(empty, new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             return;
@@ -88,8 +91,11 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < trips.size(); i++) {
             Trip trip = trips.get(i);
             String tripId = trip.getId();
-            MaterialCardView row = (MaterialCardView) inflater.inflate(
-                    R.layout.item_trip, tripListContainer, false);
+            // The newest trip leads as a full-width photo; the rest form a plain index.
+            View row = inflater.inflate(i == 0 ? R.layout.item_trip_featured : R.layout.item_trip,
+                    tripListContainer, false);
+            View divider = row.findViewById(R.id.tripItemDivider);
+            if (divider != null && i == trips.size() - 1) divider.setVisibility(View.GONE);
             TextView title = row.findViewById(R.id.tripItemTitle);
             TextView location = row.findViewById(R.id.tripItemLocation);
             ImageView image = row.findViewById(R.id.tripItemImage);
@@ -107,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
                     view -> showTripMenu(view, tripId));
             tripListContainer.addView(row);
         }
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
     private void showTripMenu(View anchor, String tripId) {

@@ -1,8 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.Wanderlog" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/wl_accent</item>
+        <item name="colorOnPrimary">@color/wl_on_accent</item>
+        <item name="colorPrimaryContainer">@color/wl_accent_tint</item>
+        <item name="colorOnPrimaryContainer">@color/wl_accent</item>
+        <item name="colorSurface">@color/wl_surface</item>
+        <item name="colorOnSurface">@color/wl_ink</item>
+        <item name="colorOnSurfaceVariant">@color/wl_mute</item>
+        <item name="colorOutline">@color/wl_outline</item>
+        <item name="colorOutlineVariant">@color/wl_line</item>
+        <item name="android:colorBackground">@color/wl_bg</item>
+        <item name="android:windowBackground">@color/wl_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">@bool/wl_light_bars</item>
+        <item name="android:windowLightNavigationBar">@bool/wl_light_bars</item>
+        <item name="materialButtonStyle">@style/Widget.Wl.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.Wl.Button.Outlined</item>
+        <item name="textInputStyle">@style/Widget.Wl.TextInput</item>
     </style>
 
     <style name="Theme.Wanderlog" parent="Base.Theme.Wanderlog" />

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Type scale: system sans, hierarchy carried by size, weight and tight tracking. -->
+    <style name="TextAppearance.Wl.Display" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">34sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:textColor">@color/wl_ink</item>
+    </style>
+    <style name="TextAppearance.Wl.Title" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">@color/wl_ink</item>
+    </style>
+    <style name="TextAppearance.Wl.Headline" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/wl_ink</item>
+    </style>
+    <style name="TextAppearance.Wl.Item" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/wl_ink</item>
+    </style>
+    <style name="TextAppearance.Wl.Body" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+        <item name="android:textColor">@color/wl_ink</item>
+    </style>
+    <style name="TextAppearance.Wl.Caption" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/wl_mute</item>
+    </style>
+    <style name="TextAppearance.Wl.Link" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/wl_accent</item>
+    </style>
+
+    <!-- One radius family: 12dp for controls, 8dp for photos. -->
+    <style name="Widget.Wl.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">52dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+    <style name="Widget.Wl.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">52dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/wl_ink</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="strokeColor">@color/wl_outline</item>
+        <item name="iconTint">@color/wl_ink</item>
+    </style>
+    <style name="Widget.Wl.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxBackgroundColor">@color/wl_surface</item>
+        <item name="boxStrokeColor">@color/wl_accent</item>
+    </style>
+    <style name="Wl.PhotoCorners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+</resources>

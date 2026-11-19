@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/addTripRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
     android:fillViewport="true">
 
     <LinearLayout
@@ -11,13 +12,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/addTripBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="-12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/trip_detail_back"
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_back"
+                android:tint="@color/wl_ink" />
+
+            <TextView
+                android:id="@+id/addTripTitle"
+                style="@style/TextAppearance.Wl.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/new_trip"
+                android:textSize="22sp" />
+        </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/trip_title"
-            app:boxBackgroundMode="outline">
+            android:layout_marginTop="8dp"
+            android:hint="@string/trip_title">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tripTitle"
@@ -25,214 +55,224 @@
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
                 android:maxLength="100" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="@string/trip_description"
-            app:boxBackgroundMode="outline">
+            android:hint="@string/trip_description">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tripDescription"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:gravity="top|start"
-                android:inputType="textMultiLine"
-                android:padding="12dp" />
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="4" />
+        </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/location">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tripLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/location"
-                app:boxBackgroundMode="outline">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tripLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <ImageButton
+            <LinearLayout
                 android:id="@+id/currentLocationButton"
-                android:layout_width="48dp"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
                 android:contentDescription="@string/use_current_location"
-                android:padding="12dp"
-                android:src="@android:drawable/ic_menu_mylocation"
-                android:tooltipText="@string/use_current_location"
-                android:tint="?attr/colorPrimary" />
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="8dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_locate"
+                    android:tint="@color/wl_accent" />
+
+                <TextView
+                    style="@style/TextAppearance.Wl.Link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/use_current_location" />
+            </LinearLayout>
 
             <ProgressBar
                 android:id="@+id/currentLocationProgress"
                 style="?android:attr/progressBarStyleSmall"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:indeterminate="true"
-                android:indeterminateTint="?attr/colorPrimary"
+                android:indeterminateTint="@color/wl_accent"
                 android:visibility="gone" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/currentLocationStatus"
+            style="@style/TextAppearance.Wl.Caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:accessibilityLiveRegion="polite"
             android:text="@string/retrieving_current_location"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:visibility="gone" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/_1_to_3_pictures"
-            android:textSize="18sp"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextAppearance.Wl.Item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/photos_label"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/TextAppearance.Wl.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/photos_range"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
             <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp">
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginEnd="8dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/image1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#DDDDDD"
+                    android:background="@color/wl_photo"
+                    android:contentDescription="@string/picture_1"
                     android:scaleType="centerCrop"
-                    android:contentDescription="@string/picture_1" />
+                    app:shapeAppearanceOverlay="@style/Wl.PhotoCorners" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/remove1"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="top|end"
-                    android:text="@string/x"
-                    android:textSize="24sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:background="@android:color/transparent"
-                    android:padding="0dp"
+                    android:background="@drawable/bg_remove_photo"
+                    android:contentDescription="@string/remove_photo"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:insetLeft="0dp"
-                    android:insetRight="0dp"
-                    android:visibility="gone"
-                    android:contentDescription="@string/remove_photo" />
+                    android:padding="0dp"
+                    android:text="@string/x"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp">
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginEnd="8dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/image2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#DDDDDD"
+                    android:background="@color/wl_photo"
+                    android:contentDescription="@string/picture_2"
                     android:scaleType="centerCrop"
-                    android:contentDescription="@string/picture_2" />
+                    app:shapeAppearanceOverlay="@style/Wl.PhotoCorners" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/remove2"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="top|end"
-                    android:text="@string/x"
-                    android:textSize="24sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:background="@android:color/transparent"
-                    android:padding="0dp"
+                    android:background="@drawable/bg_remove_photo"
+                    android:contentDescription="@string/remove_photo"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:insetLeft="0dp"
-                    android:insetRight="0dp"
-                    android:visibility="gone"
-                    android:contentDescription="@string/remove_photo" />
+                    android:padding="0dp"
+                    android:text="@string/x"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_width="96dp"
+                android:layout_height="96dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/image3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#DDDDDD"
+                    android:background="@color/wl_photo"
+                    android:contentDescription="@string/picture_3"
                     android:scaleType="centerCrop"
-                    android:contentDescription="@string/picture_3" />
+                    app:shapeAppearanceOverlay="@style/Wl.PhotoCorners" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/remove3"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="top|end"
-                    android:text="@string/x"
-                    android:textSize="24sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:background="@android:color/transparent"
-                    android:padding="0dp"
+                    android:background="@drawable/bg_remove_photo"
+                    android:contentDescription="@string/remove_photo"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:insetLeft="0dp"
-                    android:insetRight="0dp"
-                    android:visibility="gone"
-                    android:contentDescription="@string/remove_photo" />
+                    android:padding="0dp"
+                    android:text="@string/x"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
             </FrameLayout>
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/uploadImageButton"
+            style="@style/Widget.Wl.Button.Outlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/add_pictures" />
+            android:text="@string/add_pictures"
+            app:icon="@drawable/ic_camera" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/saveTripButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/save_trip" />
-
     </LinearLayout>
 </ScrollView>

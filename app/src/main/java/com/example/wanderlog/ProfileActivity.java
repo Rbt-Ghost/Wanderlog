@@ -2,7 +2,9 @@ package com.example.wanderlog;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,7 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.card.MaterialCardView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -69,6 +71,8 @@ public class ProfileActivity extends AppCompatActivity {
                 ? getString(R.string.profile_default_name) : user.getDisplayName());
         email.setText(user.getEmail() == null ? "" : user.getEmail());
 
+        ((TextView) findViewById(R.id.profileAvatar)).setText(UserInitial.of(user));
+        findViewById(R.id.profileBack).setOnClickListener(view -> finish());
         tripCount = findViewById(R.id.profileTripCount);
         destinationCount = findViewById(R.id.profileDestinationCount);
         photoCount = findViewById(R.id.profilePhotoCount);
@@ -114,51 +118,35 @@ public class ProfileActivity extends AppCompatActivity {
         int recentCount = Math.min(3, trips.size());
         for (int i = 0; i < recentCount; i++) {
             Trip trip = trips.get(i);
-            MaterialCardView card = createRecentTripCard(trip);
-            recentTripsContainer.addView(card);
+            recentTripsContainer.addView(createRecentTripRow(trip));
         }
     }
 
-    private MaterialCardView createRecentTripCard(Trip trip) {
-        MaterialCardView card = new MaterialCardView(this);
-        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        cardParams.bottomMargin = dp(10);
-        card.setLayoutParams(cardParams);
-        card.setClickable(true);
-        card.setFocusable(true);
-        card.setRadius(dp(16));
-        card.setCardElevation(dp(1));
-        card.setStrokeWidth(0);
-        card.setOnClickListener(view -> {
+    private View createRecentTripRow(Trip trip) {
+        View row = LayoutInflater.from(this).inflate(
+                R.layout.item_trip_compact, recentTripsContainer, false);
+        ((TextView) row.findViewById(R.id.recentTitle)).setText(
+                trip.getTitle() == null || trip.getTitle().trim().isEmpty()
+                        ? getString(R.string.untitled_trip) : trip.getTitle());
+        TextView location = row.findViewById(R.id.recentLocation);
+        if (trip.getLocation() != null && !trip.getLocation().trim().isEmpty()) {
+            location.setText(trip.getLocation().trim());
+        } else {
+            location.setVisibility(View.GONE);
+        }
+        ImageView image = row.findViewById(R.id.recentImage);
+        if (!trip.getPhotos().isEmpty()) {
+            try { image.setImageURI(trip.getPhotos().get(0)); }
+            catch (RuntimeException exception) {
+                image.setImageResource(android.R.drawable.ic_menu_gallery);
+            }
+        }
+        row.setOnClickListener(view -> {
             Intent intent = new Intent(this, TripDetailActivity.class);
             intent.putExtra(TripStore.EXTRA_TRIP_ID, trip.getId());
             startActivity(intent);
         });
-
-        LinearLayout textContainer = new LinearLayout(this);
-        textContainer.setOrientation(LinearLayout.VERTICAL);
-        textContainer.setPadding(dp(16), dp(14), dp(16), dp(14));
-
-        TextView title = new TextView(this);
-        title.setText(trip.getTitle() == null || trip.getTitle().trim().isEmpty()
-                ? getString(R.string.untitled_trip) : trip.getTitle());
-        title.setTextSize(16);
-        title.setTypeface(title.getTypeface(), android.graphics.Typeface.BOLD);
-        textContainer.addView(title);
-
-        if (trip.getLocation() != null && !trip.getLocation().trim().isEmpty()) {
-            TextView location = new TextView(this);
-            location.setText(trip.getLocation().trim());
-            location.setTextSize(14);
-            LinearLayout.LayoutParams locationParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            locationParams.topMargin = dp(4);
-            textContainer.addView(location, locationParams);
-        }
-
-        card.addView(textContainer);
-        return card;
+        return row;
     }
 
     private int dp(int value) {

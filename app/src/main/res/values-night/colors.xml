@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="wl_bg">#0F1722</color>
+    <color name="wl_surface">#17212F</color>
+    <color name="wl_ink">#EAF0F7</color>
+    <color name="wl_mute">#9FADBF</color>
+    <color name="wl_line">#263244</color>
+    <color name="wl_outline">#6A7889</color>
+    <color name="wl_accent">#7DB6E8</color>
+    <color name="wl_accent_tint">#16304A</color>
+    <color name="wl_on_accent">#07192B</color>
+    <color name="wl_warm">#F08A66</color>
+    <color name="wl_photo">#1F2A3A</color>
+    <color name="wl_scrim">#B30F1722</color>
+</resources>

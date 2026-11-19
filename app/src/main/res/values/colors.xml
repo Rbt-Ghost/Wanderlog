@@ -2,4 +2,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Coastal palette: sand ground, sea-blue accent, coral for places, navy ink. -->
+    <color name="wl_bg">#F4EFE4</color>
+    <color name="wl_surface">#FFFDF8</color>
+    <color name="wl_ink">#1B263B</color>
+    <color name="wl_mute">#56627A</color>
+    <color name="wl_line">#DAD3C2</color>
+    <color name="wl_outline">#8A8F9C</color>
+    <color name="wl_accent">#1B6CA8</color>
+    <color name="wl_accent_tint">#D9E7F2</color>
+    <color name="wl_on_accent">#FFFFFF</color>
+    <color name="wl_warm">#D9603B</color>
+    <color name="wl_photo">#E4DCCB</color>
+    <color name="wl_scrim">#B31B263B</color>
 </resources>

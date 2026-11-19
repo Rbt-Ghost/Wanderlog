@@ -1,6 +1,7 @@
 package com.example.wanderlog;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -65,7 +66,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (tripListContainer != null) TripStore.startListening(this, tripsListener);
+        if (tripListContainer != null) {
+            TripStore.startListening(this, tripsListener);
+            ProfilePhotoStore.load(this, this::showAvatar);
+        }
+    }
+
+    private void showAvatar(Bitmap photo) {
+        if (isFinishing() || isDestroyed()) return;
+        ImageView image = findViewById(R.id.profileButtonImage);
+        image.setVisibility(photo == null ? View.GONE : View.VISIBLE);
+        if (photo != null) image.setImageBitmap(photo);
     }
 
     @Override
@@ -91,9 +102,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < trips.size(); i++) {
             Trip trip = trips.get(i);
             String tripId = trip.getId();
-            // The newest trip leads as a full-width photo; the rest form a plain index.
-            View row = inflater.inflate(i == 0 ? R.layout.item_trip_featured : R.layout.item_trip,
-                    tripListContainer, false);
+            View row = inflater.inflate(R.layout.item_trip, tripListContainer, false);
             View divider = row.findViewById(R.id.tripItemDivider);
             if (divider != null && i == trips.size() - 1) divider.setVisibility(View.GONE);
             TextView title = row.findViewById(R.id.tripItemTitle);

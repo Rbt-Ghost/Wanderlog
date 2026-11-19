@@ -77,6 +77,9 @@
     <string name="profile_activity_loading">Loading your trips…</string>
     <string name="profile_activity_load_failed">Couldn’t load your activity. Check your connection and try again.</string>
     <string name="profile_activity_empty">No trips yet. Add your first trip and it will show up here.</string>
+    <string name="change_profile_photo">Change profile photo</string>
+    <string name="choose_new_photo">Choose new photo</string>
+    <string name="profile_photo_failed">Could not use that picture. Try another one.</string>
     <string name="untitled_trip">Untitled trip</string>
     <string name="log_out">Log out</string>
     <string name="logged_out">You have been logged out.</string>

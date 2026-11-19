@@ -63,6 +63,10 @@
         <item name="boxBackgroundColor">@color/wl_surface</item>
         <item name="boxStrokeColor">@color/wl_accent</item>
     </style>
+    <style name="Wl.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
     <style name="Wl.PhotoCorners" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
